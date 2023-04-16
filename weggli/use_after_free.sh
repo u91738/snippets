@@ -7,7 +7,7 @@ set -e
 echo '#####################################################'
 echo '# Use after free'
 echo '#####################################################'
-weggli '{
+weggli $WEGGLI_ARGS '{
     free($a);
     not: $a=_;
     not: return _;

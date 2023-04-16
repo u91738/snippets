@@ -4,7 +4,7 @@ set -e
 echo '#####################################################'
 echo '# Uninitialized pointer'
 echo '#####################################################'
-weggli '{
+weggli $WEGGLI_ARGS '{
     _* $p;
     NOT: $p = _;
     NOT: &$p;

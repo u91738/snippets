@@ -5,28 +5,28 @@ echo '#####################################################'
 echo '# memcpy to stack with variable size'
 echo '#####################################################'
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $f(_ $size) {
         _ $buf[_];
         NOT: if( _($size) ) { }
         memcpy($buf, _, $size);
     }' .
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $f(_ $size_arg) {
         _ $buf[_];
         NOT: if( _($size_arg.$size_field) ) { }
         memcpy($buf, _, $size_arg.$size_field);
     }' .
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $f(_ $size_arg) {
         _ $buf[_];
         NOT: if( _($size_arg->$size_field) ) { }
         memcpy($buf, _, $size_arg->$size_field);
     }' .
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $f(_ $size_arg) {
         _ $buf[_];
         NOT: if( _($size_arg->$size_field) ) { }
@@ -36,7 +36,7 @@ weggli '
         memcpy($buf, _, $tmp);
     }' .
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $f(_ $size_arg) {
         _ $buf[_];
         NOT: if( _($size_arg.$size_field) ) { }

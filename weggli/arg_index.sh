@@ -5,7 +5,7 @@ echo '#####################################################'
 echo '# Stack array indexed with func argument'
 echo '#####################################################'
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $fn(_ $limit) {
         _ $buf[_];
         not: if( _($limit) ) { _ ; }
@@ -15,7 +15,7 @@ weggli '
         }
     }' .
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $fn(_ $limit_arg) {
         _ $buf[_];
         not: if( _($limit_arg->field) ) { _ ; }
@@ -25,7 +25,7 @@ weggli '
         }
     }' .
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $fn(_ $limit_arg) {
         _ $buf[_];
         not: if( _($limit_arg.field) ) { _ ; }
@@ -35,7 +35,7 @@ weggli '
         }
     }' .
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $fn(_ $limit) {
         _ $buf[_];
         not: if( _($limit) ) { _ ; }
@@ -47,7 +47,7 @@ weggli '
         }
     }' .
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $fn(_ $limit_arg) {
         _ $buf[_];
         not: if( _($limit_arg->$field) ) { _ ; }
@@ -59,7 +59,7 @@ weggli '
         }
     }' .
 
-weggli '
+weggli $WEGGLI_ARGS '
     _ $fn(_ $limit_arg) {
         _ $buf[_];
         not: if( _($limit_arg.$field) ) { _ ; }

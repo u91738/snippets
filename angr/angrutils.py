@@ -34,3 +34,15 @@ def get_init_state(proj):
         last_state = sim.active[0]
         sim.step()
     return last_state
+
+def step_until_first_change(sim, f):
+    '''advance the sim until f(state) for some active state
+    becomes different from initial f(sim.active[0])'''
+    init = f(sim.active[0])
+    while sim.active:
+        sim.step()
+        for a in sim.active:
+            r = f(a)
+            if r != init:
+                return r
+    return None

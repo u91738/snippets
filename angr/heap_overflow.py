@@ -8,6 +8,7 @@ def get_input(state):
     return state.posix.dumps(0)
 
 proj = angr.Project(binfile, load_options={'auto_load_libs': False, 'load_debug_info': True})
+cc = proj.factory.cc()
 
 start_state = proj.factory.entry_state()
 
@@ -17,18 +18,21 @@ alloc_calls = []
 try:
     malloc = proj.kb.functions['malloc'].addr
     alloc_calls.append(malloc)
+    malloc_proto = angr.sim_type.parse_signature('void *malloc(size_t size)')
 except KeyError:
-    malloc = None
+    malloc, malloc_proto = None, None
 try:
     calloc = proj.kb.functions['calloc'].addr
     alloc_calls.append(calloc)
+    calloc_proto = angr.sim_type.parse_signature('void *calloc(size_t nmemb, size_t size)')
 except KeyError:
-    calloc = None
+    calloc, calloc_proto = None, None
 try:
     realloc = proj.kb.functions['realloc'].addr
     alloc_calls.append(realloc)
+    realloc_proto = angr.sim_type.parse_signature('void *realloc(void *ptr, size_t size)')
 except KeyError:
-    realloc = None
+    realloc, realloc_proto = None
 
 assert alloc_calls, 'no allocation calls found in the binary'
 
@@ -45,18 +49,22 @@ for call in calls:
 
     ip = call.solver.eval(call.regs.ip)
     if ip == malloc:
-        alloc_size = call.regs.edi # obviously platform-dependent
+        [alloc_size] = cc.get_args(call, malloc_proto)
         callname = 'malloc'
+        retloc = cc.return_val(malloc_proto.returnty)
     elif ip == calloc:
-        alloc_size = call.regs.edi * call.regs.esi
+        [nmemb, size] = cc.get_args(call, calloc_proto)
+        alloc_size = nmemb * size
         callname = 'calloc'
+        retloc = cc.return_val(calloc_proto.returnty)
     elif ip == realloc:
-        alloc_size = call.regs.esi
+        [alloc_size] = cc.get_args(call, realloc_proto)
         callname = 'realloc'
+        retloc = cc.return_val(realloc_proto.returnty)
     else:
         assert False, "can't tell which call is used"
 
-    result_ptr = angrutils.step_until_first_change(sim, lambda s: s.solver.eval(s.regs.rax))
+    result_ptr = angrutils.step_until_first_change(sim, lambda s: s.solver.eval(retloc.get_value(s)))
     print('allocation returned:', hex(result_ptr))
 
     for a in sim.active:

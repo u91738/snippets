@@ -39,12 +39,15 @@ int main(int argc, char **argv)
     char s[1024];
     // angr seems to have issues with iostream
     if(argc == 1) {
-        fgets(s, sizeof(s), stdin);
+        if(fgets(s, sizeof(s), stdin) == NULL)
+            return 1;
     } else {
         FILE * f = fopen(argv[1], "rb");
         if(f) {
-            fgets(s, sizeof(s), f);
+            char *ret = fgets(s, sizeof(s), f);
             fclose(f);
+            if(ret == NULL)
+                return 1;
         } else {
             return 1;
         }

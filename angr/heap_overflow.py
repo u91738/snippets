@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!env python3
 import angr
 import angrutils
 

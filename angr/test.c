@@ -1,5 +1,7 @@
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 
 
@@ -55,6 +57,12 @@ void f(char *s)
             }
             free(buf);
         }
+    } else if (i >= 60 && i < 70) {
+        printf("arbitrary memory write\n");
+        static_assert(sizeof(uint64_t*) == sizeof(long long));
+        uint64_t *p = (uint64_t *)atoll(&s[8]);
+        uint64_t v = atoll(&s[17]);
+        *p = v;
     } else {
         char buf[20];
         printf("stack buffer overflow buf size: %ld strlen(s): %ld\n", sizeof(buf), strlen(s));
